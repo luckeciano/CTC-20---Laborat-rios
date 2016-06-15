@@ -14,7 +14,7 @@ class DynammicProgramming
         DynammicProgramming(vector<int> verts, vector<vector<double> > matrix);
         virtual ~DynammicProgramming();
         vector<int> Solve (double &cost);
-        bool CheckHamiltonian(vector<int> &route);
+        bool CheckHamiltonian(vector<int> &route, double &brute_cost);
         double TSP(int startVertex, int bitmask,  vector<vector<int> > &memo);
         int SolveHeldKarp(double &cost);
 

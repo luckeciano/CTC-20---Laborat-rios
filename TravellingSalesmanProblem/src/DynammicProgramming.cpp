@@ -54,8 +54,6 @@ vector<int> DynammicProgramming::Solve(double &cost)
 
     Node root;
     cost = GetMinimumCostRoute(startVertex, hashSet, root);
-    if (cost == -1)
-        cout << "not hamiltonian" << endl;
     clock_t end = clock();
     cout << "Elapsed time in Brute Force: " << (end-begin)/1000 << "." << (end-begin)%1000 << " s" << endl;
     return TraverseTree(root, startVertex);
@@ -134,8 +132,6 @@ double DynammicProgramming::GetMinimumCostRoute(int startVertex, unordered_set<i
     //problema here
     if (root.ChildNodes.size() !=0)
         root.ChildNodes[selectIdx].Selected = true;
-    if (totalCost == numeric_limits<double>::max())
-        return -1;
     return totalCost;
 }
 
@@ -170,9 +166,9 @@ void DynammicProgramming::TraverseTreeUtil(Node &root, queue<int> &vertics)
         }
     }
 }
-bool DynammicProgramming::CheckHamiltonian(vector<int> &route)
+bool DynammicProgramming::CheckHamiltonian(vector<int> &route, double &brute_cost)
 {
-    if (route.size() != vertices.size() + 1) {
+    if (route.size() != vertices.size() + 1 || brute_cost > 999999 ) {
         cout << "Grafo nao hamiltoniano." << endl;
         return false;
     }
@@ -227,15 +223,6 @@ int main()
             k=k-1;
     };
 
-    vertics = {0, 1, 2, 3, 4, 5};
-    adjMatrix = {
-        { -1,  -1,   9,   7,  10,  -1},
-        {-1,  -1,   8,   8,  -1,  -1},
-        {9 ,  8,  -1,  10 , -1 ,  6},
-        {7 ,  8 , 10 , -1 ,  3 , -1},
-        {10 , -1 , -1 ,  3 , -1 , -1},
-        {-1 , -1 ,  6 , -1 , -1 , -1}
-    };
 
     // Para tabela de arestas completa
 
@@ -270,7 +257,7 @@ int main()
     double cost, brute_cost;
     vector<int> route = dynammicProgramming.Solve(brute_cost);
     bool isHamiltonian = true;
-    isHamiltonian = dynammicProgramming.CheckHamiltonian(route);
+    isHamiltonian = dynammicProgramming.CheckHamiltonian(route, brute_cost);
     if (isHamiltonian) {
         cout << "Cost Held Karp: " << dynammicProgramming.SolveHeldKarp(cost) << endl;
         cout << "Cost Brute Force: " << brute_cost << endl << endl << endl;
