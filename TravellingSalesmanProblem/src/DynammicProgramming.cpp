@@ -8,6 +8,8 @@
 #include <ctime>
 #include <vector>
 #include <map>
+#include <windows.h>
+#include <psapi.h>
 
 using namespace std;
 
@@ -52,6 +54,8 @@ vector<int> DynammicProgramming::Solve(double &cost)
 
     Node root;
     cost = GetMinimumCostRoute(startVertex, hashSet, root);
+    if (cost == -1)
+        cout << "not hamiltonian" << endl;
     clock_t end = clock();
     cout << "Elapsed time in Brute Force: " << (end-begin)/1000 << "." << (end-begin)%1000 << " s" << endl;
     return TraverseTree(root, startVertex);
@@ -130,6 +134,8 @@ double DynammicProgramming::GetMinimumCostRoute(int startVertex, unordered_set<i
     //problema here
     if (root.ChildNodes.size() !=0)
         root.ChildNodes[selectIdx].Selected = true;
+    if (totalCost == numeric_limits<double>::max())
+        return -1;
     return totalCost;
 }
 
@@ -221,9 +227,19 @@ int main()
             k=k-1;
     };
 
+    vertics = {0, 1, 2, 3, 4, 5};
+    adjMatrix = {
+        { -1,  -1,   9,   7,  10,  -1},
+        {-1,  -1,   8,   8,  -1,  -1},
+        {9 ,  8,  -1,  10 , -1 ,  6},
+        {7 ,  8 , 10 , -1 ,  3 , -1},
+        {10 , -1 , -1 ,  3 , -1 , -1},
+        {-1 , -1 ,  6 , -1 , -1 , -1}
+    };
+
     // Para tabela de arestas completa
-    /*
-    vector<vector<double> > adjMatrix;
+
+    /*vector<vector<double> > adjMatrix;
     adjMatrix.resize(order);
     for (int i = 0; i < order; ++i)
         adjMatrix[i].resize(order);
